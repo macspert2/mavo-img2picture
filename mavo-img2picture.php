@@ -84,6 +84,11 @@ class Mavo_Img2Picture {
             return;
         }
 
+        // Skip PNG images — no webp siblings are assumed to exist for them.
+        if (strtolower(pathinfo($src, PATHINFO_EXTENSION)) === 'png') {
+            return;
+        }
+
         // --- Derive variant URLs ---
         $info  = pathinfo($src);
         $base  = $info['dirname'] . '/' . $info['filename'];
