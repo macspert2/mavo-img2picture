@@ -16,8 +16,9 @@ class Mavo_Img2Picture {
     public function __construct() {
         // Priority 9: run before Jetpack Photon (priority 10), which rewrites
         // image URLs to its CDN (i0.wp.com) and would break our URL derivation.
-        add_filter('the_content',        [$this, 'transform'], 9);
-        add_filter('post_thumbnail_html', [$this, 'transform'], 9);
+        add_filter('the_content',          [$this, 'transform'], 9);
+        add_filter('post_thumbnail_html',  [$this, 'transform'], 9);
+        add_filter('wp_get_attachment_image', [$this, 'transform'], 9);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
     }
 
