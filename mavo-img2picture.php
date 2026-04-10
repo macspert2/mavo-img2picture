@@ -14,7 +14,9 @@ defined('ABSPATH') || exit;
 class Mavo_Img2Picture {
 
     public function __construct() {
-        add_filter('the_content', [$this, 'transform'], 20);
+        // Priority 9: run before Jetpack Photon (priority 10), which rewrites
+        // image URLs to its CDN (i0.wp.com) and would break our URL derivation.
+        add_filter('the_content', [$this, 'transform'], 9);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
     }
 
@@ -71,6 +73,12 @@ class Mavo_Img2Picture {
 
         // Only convert full-width images (960px or wider)
         if ($width < 960 || empty($src)) {
+            return;
+        }
+
+        // Skip CDN-rewritten URLs (e.g. Jetpack Photon i0.wp.com or query-string variants).
+        // These won't have the expected file-system layout for 640/480 webp siblings.
+        if (str_contains($src, 'i0.wp.com') || str_contains($src, '?')) {
             return;
         }
 
