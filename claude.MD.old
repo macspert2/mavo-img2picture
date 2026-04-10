@@ -1,0 +1,48 @@
+This is a project for a wordpress plugin which converts img tags in old posts into picture tags.
+The plugin works on the fly when displaying the site. It does not change the post content.
+The current image tag looks something like this:
+<img class="aligncenter size-full wp-image-64676" src="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987.jpeg" alt="desert des bardenas van" width="960" height="720" />
+
+This image tag should be converted into a picture tag like this:
+<picture>
+	<source type="image/webp" media="(min-width: 640px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987.jpeg.webp">
+	<source media="(min-width: 640px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987.jpeg">
+	<source type="image/webp" media="(min-width: 480px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-640x480.jpeg.webp">
+	<source media="(min-width: 480px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-640x480.jpeg">
+	<source type="image/webp" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-480x360.jpeg.webp">
+	<img src="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-480x360.jpeg" alt="desert des bardenas van" width="480" height="360" loading="lazy">
+</picture>
+
+It is safe to assume that:
+- for each original jpeg/jpg image there exists a corresponding webp image (.jpeg.webp or .jpg.webp)
+- the 640 and 480 width images follow the standard wordpress naming convention with name-640xheight.jp.webp etc.
+
+The Picture tag should order srcsets from top to bottom:
+- for media min-width 640: webp version of full size image (assume 960 width)
+- for media min-width 640: jpg version of full size image (assume 960 width)
+- for media min-width 480: webp version of 640 wide image
+- for media min-width 480: jpg version of 640 wide image
+- without min-width: webp version of 480 wide image
+- img fallback: 480 wide jpg
+
+If the image is wrapped in a centered p tag, the p tag can be completly dropped since the picture will be centered via its css class. I.e. this:
+<p style="text-align: center;"><img class="aligncenter size-full wp-image-64676" src="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987.jpeg" alt="desert des bardenas van" width="960" height="720" /></p>
+
+becomes this:
+<picture>
+	<source type="image/webp" media="(min-width: 640px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987.jpeg.webp">
+	<source media="(min-width: 640px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987.jpeg">
+	<source type="image/webp" media="(min-width: 480px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-640x480.jpeg.webp">
+	<source media="(min-width: 480px)" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-640x480.jpeg">
+	<source type="image/webp" srcset="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-480x360.jpeg.webp">
+	<img src="https://www.mamanvoyage.com/wp-content/uploads/2026/03/IMG_1987-480x360.jpeg" alt="desert des bardenas van" width="480" height="360" loading="lazy">
+</picture>
+
+Be proactive and inventive
+
+### Safety and permissions
+
+Allowed without prompt:
+- read files, list files, write files, get any file (html, css, js) from http://www.mamanvoyage.com/
+
+Note: proactively suggest installation of tools which would help with your task for installation.
